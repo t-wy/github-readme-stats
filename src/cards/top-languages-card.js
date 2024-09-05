@@ -251,6 +251,18 @@ const formatBytes = (bytes) => {
   return `${(bytes / Math.pow(base, i)).toFixed(1)} ${sizes[i]}`;
 };
 
+const createCompactTotalNode = ({ totalSize }) => {
+  const staggerDelay = (-1 + 3) * 150;
+
+  return `
+    <g class="stagger" style="animation-delay: ${staggerDelay}ms">
+      <text data-testid="lang-name" x="0" y="10" class='lang-name'>
+        ${showByte ? "Total: " + formatBytes(totalSize) : ""}
+      </text>
+    </g>
+  `;
+};
+
 /**
  * Creates compact text item for a programming language.
  *
@@ -327,7 +339,9 @@ const createLanguageTextNode = ({ langs, totalSize, hideProgress }) => {
 const createDonutLanguagesNode = ({ langs, totalSize }) => {
   const showByte = true;
   return flexLayout({
-    items: langs.map((lang, index) => {
+    items: [createCompactTotalNode({
+      totalSize,
+    }), ...langs.map((lang, index) => {
       return createCompactLangNode({
         lang,
         totalSize,
@@ -335,7 +349,7 @@ const createDonutLanguagesNode = ({ langs, totalSize }) => {
         showByte,
         index,
       });
-    }),
+    })],
     gap: 32,
     direction: "column",
   }).join("");
