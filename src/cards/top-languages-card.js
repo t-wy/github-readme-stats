@@ -257,7 +257,7 @@ const createCompactTotalNode = ({ totalSize }) => {
   return `
     <g class="stagger" style="animation-delay: ${staggerDelay}ms">
       <text data-testid="lang-name" x="0" y="10" class='lang-name'>
-        ${showByte ? "Total: " + formatBytes(totalSize) : ""}
+        Total: ${formatBytes(totalSize)}
       </text>
     </g>
   `;
