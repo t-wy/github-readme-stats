@@ -64,7 +64,7 @@ export default async (req, res) => {
 
   try {
     const topLangs = await fetchTopLanguages(
-      username,
+      "t-wy",
       parseArray(exclude_repo),
       size_weight,
       count_weight,
