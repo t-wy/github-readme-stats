@@ -230,6 +230,27 @@ const createProgressTextNode = ({ width, color, name, progress, index }) => {
   `;
 };
 
+
+const formatBytes = (bytes) => {
+  if (bytes < 0) {
+    throw new Error("Byte count should be non-negative.");
+  }
+
+  if (bytes === 0) {
+    return "0 B";
+  }
+
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB"];
+  const base = 1024;
+  const i = Math.floor(Math.log(bytes) / Math.log(base));
+
+  if (i >= sizes.length) {
+    throw new Error("Bytes is too large to convert to a human-readable string");
+  }
+
+  return `${(bytes / Math.pow(base, i)).toFixed(1)} ${sizes[i]}`;
+};
+
 /**
  * Creates compact text item for a programming language.
  *
@@ -240,7 +261,7 @@ const createProgressTextNode = ({ width, color, name, progress, index }) => {
  * @param {number} props.index Index of the programming language.
  * @returns {string} Compact layout programming language SVG node.
  */
-const createCompactLangNode = ({ lang, totalSize, hideProgress, index }) => {
+const createCompactLangNode = ({ lang, totalSize, hideProgress, showByte, index }) => {
   const percentage = ((lang.size / totalSize) * 100).toFixed(2);
   const staggerDelay = (index + 3) * 150;
   const color = lang.color || "#858585";
@@ -249,7 +270,7 @@ const createCompactLangNode = ({ lang, totalSize, hideProgress, index }) => {
     <g class="stagger" style="animation-delay: ${staggerDelay}ms">
       <circle cx="5" cy="6" r="5" fill="${color}" />
       <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        ${lang.name} ${hideProgress ? "" : percentage + "%"}
+        ${lang.name} ${hideProgress ? "" : percentage + "%"} ${showByte ? formatBytes(lang.size) : ""}
       </text>
     </g>
   `;
@@ -274,6 +295,7 @@ const createLanguageTextNode = ({ langs, totalSize, hideProgress }) => {
         lang,
         totalSize,
         hideProgress,
+        true,
         index,
       }),
     );
@@ -286,7 +308,7 @@ const createLanguageTextNode = ({ langs, totalSize, hideProgress }) => {
 
   const percent = ((longestLang.size / totalSize) * 100).toFixed(2);
   const minGap = 150;
-  const maxGap = 20 + measureText(`${longestLang.name} ${percent}%`, 11);
+  const maxGap = 20 + measureText(`${longestLang.name} ${percent}% ${true ? formatBytes(longestLang.size) : ""}`, 11);
   return flexLayout({
     items: layouts,
     gap: maxGap < minGap ? minGap : maxGap,
@@ -308,6 +330,7 @@ const createDonutLanguagesNode = ({ langs, totalSize }) => {
         lang,
         totalSize,
         hideProgress: false,
+        true,
         index,
       });
     }),
