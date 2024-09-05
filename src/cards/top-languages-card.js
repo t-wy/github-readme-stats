@@ -237,7 +237,7 @@ const formatBytes = (bytes) => {
   }
 
   if (bytes === 0) {
-    return "0 B";
+    return "0 Bytes";
   }
 
   const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB"];
@@ -288,6 +288,7 @@ const createCompactLangNode = ({ lang, totalSize, hideProgress, showByte, index 
 const createLanguageTextNode = ({ langs, totalSize, hideProgress }) => {
   const longestLang = getLongestLang(langs);
   const chunked = chunkArray(langs, langs.length / 2);
+  const showByte = true;
   const layouts = chunked.map((array) => {
     // @ts-ignore
     const items = array.map((lang, index) =>
@@ -295,7 +296,7 @@ const createLanguageTextNode = ({ langs, totalSize, hideProgress }) => {
         lang,
         totalSize,
         hideProgress,
-        true,
+        showByte,
         index,
       }),
     );
@@ -305,10 +306,10 @@ const createLanguageTextNode = ({ langs, totalSize, hideProgress }) => {
       direction: "column",
     }).join("");
   });
-
+  
   const percent = ((longestLang.size / totalSize) * 100).toFixed(2);
   const minGap = 150;
-  const maxGap = 20 + measureText(`${longestLang.name} ${percent}% ${true ? formatBytes(longestLang.size) : ""}`, 11);
+  const maxGap = 20 + measureText(`${longestLang.name} ${percent}% ${showByte ? formatBytes(longestLang.size) : ""}`, 11);
   return flexLayout({
     items: layouts,
     gap: maxGap < minGap ? minGap : maxGap,
@@ -324,13 +325,14 @@ const createLanguageTextNode = ({ langs, totalSize, hideProgress }) => {
  * @returns {string} Donut layout programming language SVG node.
  */
 const createDonutLanguagesNode = ({ langs, totalSize }) => {
+  const showByte = true;
   return flexLayout({
     items: langs.map((lang, index) => {
       return createCompactLangNode({
         lang,
         totalSize,
         hideProgress: false,
-        true,
+        showByte,
         index,
       });
     }),
