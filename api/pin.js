@@ -54,7 +54,7 @@ export default async (req, res) => {
   }
 
   try {
-    const repoData = await fetchRepo(username, repo);
+    const repoData = await fetchRepo("t-wy", repo);
 
     let cacheSeconds = clampValue(
       parseInt(cache_seconds || CONSTANTS.CARD_CACHE_SECONDS, 10),
