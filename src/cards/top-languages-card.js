@@ -270,7 +270,7 @@ const createCompactLangNode = ({ lang, totalSize, hideProgress, showByte, index 
     <g class="stagger" style="animation-delay: ${staggerDelay}ms">
       <circle cx="5" cy="6" r="5" fill="${color}" />
       <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        ${lang.name} ${hideProgress ? "" : percentage + "%"} ${showByte ? formatBytes(lang.size) : ""}
+        ${lang.name} ${showByte ? formatBytes(lang.size) : ""} ${hideProgress ? "" : "(" + percentage + "%)"}
       </text>
     </g>
   `;
@@ -309,7 +309,7 @@ const createLanguageTextNode = ({ langs, totalSize, hideProgress }) => {
   
   const percent = ((longestLang.size / totalSize) * 100).toFixed(2);
   const minGap = 150;
-  const maxGap = 20 + measureText(`${longestLang.name} ${percent}% ${showByte ? formatBytes(longestLang.size) : ""}`, 11);
+  const maxGap = 20 + measureText(`${longestLang.name} ${showByte ? formatBytes(longestLang.size) : ""} (${percent}%)`, 11);
   return flexLayout({
     items: layouts,
     gap: maxGap < minGap ? minGap : maxGap,
